@@ -103,6 +103,25 @@ This section provides a step-by-step guide to deploying stateful Kafka workload 
 11. Test the _kafka_ infrastructure
 
     ```bash
+    # Connect a debug session to kafka
+    $ oc run -it kafka-statefulsets --rm --image=enmasseproject/kafka-statefulsets:latest --command -- bash
+    
+    # Within the container
+    # Create a Kafka topic
+    $ bin/kafka-topics.sh --create --zookeeper zookeeper --replication-factor 3 --partitions 3 --topic test
+    
+    # List the Kafka topics
+    $ bin/kafka-topics.sh --list --zookeeper zookeeper
+    
+    # Produce some message on the topic
+    $ bin/kafka-console-producer.sh --broker-list kafka:9092 --topic test <<EOF
+    foo
+    bar
+    baz
+    EOF
+    
+    # Consume the messages from the topic
+    $ bin/kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic test --from-beginning
     ```
    
 # Credits and external resources
